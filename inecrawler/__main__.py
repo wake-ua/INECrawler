@@ -44,9 +44,9 @@ def main():
     try:
         if utils.check_url(url):
 
-            crawler = OpenDataCrawler(url, o_id, o_tourism, theme, path=d_path)
+            crawler = OpenDataCrawler(url, o_id, o_tourism, theme, d_path)
 
-            last_id = utils.load_resume_id(crawler.resume_path)
+            # last_id = utils.load_resume_id(crawler.resume_path)
 
             if crawler.dms:
 
@@ -57,17 +57,17 @@ def main():
                 logger.info("%i operations found", len(operations))
                 print(str(len(operations)) + " operations found!")
 
-                if last_id is None or last_id == "":
-                    jump_execution = False
+                # if last_id is None or last_id == "":
+                #     jump_execution = False
 
                 if operations:
                     # Iterate over each package obtaining the info and saving the dataset
                     for operation_id in tqdm(operations, desc="Processing", colour="green"): # Para cada operacion, obtener todas las tablas
 
-                        if jump_execution and last_id != operation_id:
-                            continue
-                        else:
-                            jump_execution = False
+                        # if jump_execution and last_id != operation_id:
+                        #     continue
+                        # else:
+                        #     jump_execution = False
 
                         tables = crawler.get_tables(operation_id)
                         for table_id in tables:

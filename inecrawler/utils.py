@@ -1,8 +1,8 @@
-from w3lib.url import url_query_cleaner
-from url_normalize import url_normalize
 import os
 import requests
 import traceback
+from w3lib.url import url_query_cleaner
+from url_normalize import url_normalize
 from setup_logger import logger
 
 def clean_url(u):
@@ -45,6 +45,8 @@ def lower_list(li):
 def create_folder(path):
     if not os.path.isdir(path):
         try:
+            path = path.replace('/', '\ ')
+            path = path.replace(' ', '')
             os.mkdir(path)
         except OSError:
             print("Creation of the dir %s failed" % path)
@@ -103,42 +105,18 @@ def get_operation_details(id, detail):
         logger.info(e)
         return None
     
-def get_operation_name(id, detail):
+def get_operation_name(id):
     try:
         info = ''
-        if id:
-            if detail:
-                response = requests.get('https://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES')
-                if response.status_code == 200:
-                    operations = response.json()
-                    if len(operations) > 0:
-                        for p in operations:
-                            if p['Id'] == id:
-                                if detail == 'Name':
-                                    info = p['Nombre']
+        response = requests.get('https://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES')
+        if response.status_code == 200:
+            operations = response.json()
+            if len(operations) > 0:
+                for p in operations:
+                    if p['Id'] == id:
+                        info = p['Nombre']
         return info
         
-    except Exception as e:
-        print(traceback.format_exc())
-        logger.info(e)
-        return None
-    
-def get_table_details(id, detail):
-    try:
-        info = ''
-        if id:
-            if detail:
-                res = requests.get('https://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/' + str(id))
-                if res.status_code == 200:
-                    tables = res.json()
-                    if len(tables) > 0:
-                        for p in tables:
-                            if p['Id'] == id:
-                                if detail == 'Name':
-                                    info = p['Nombre']
-                                elif detail == 'Modification':
-                                    info = p['Ultima_Modificacion']
-        return info
     except Exception as e:
         print(traceback.format_exc())
         logger.info(e)

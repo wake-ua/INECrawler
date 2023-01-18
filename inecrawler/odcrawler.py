@@ -4,10 +4,11 @@ import json
 import utils
 import re
 import os
+import time
 from INECrawler import INECrawler
 from setup_logger import logger
 from sys import exit
-import time
+
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -18,7 +19,7 @@ class OpenDataCrawler():
         self.domain = domain
         if not path:
             directory = os.getcwd()
-            path = directory+"/data/"
+            path = directory + '/data/'
             utils.create_folder(path)
         self.save_path = path + utils.clean_url(self.domain)
         self.resume_path = path + "resume_"+utils.clean_url(self.domain)+".txt"

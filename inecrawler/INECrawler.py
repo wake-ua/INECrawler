@@ -2,7 +2,9 @@ import requests
 import utils
 import traceback
 import uuid
+import os
 import pandas as pd
+import numpy as np
 from setup_logger import logger
 from inecrawlerInterface import INECrawlerInterface as interface
 
@@ -11,6 +13,9 @@ class INECrawler(interface):
     
     def __init__(self, domain):
         self.domain = domain
+        self.tourism_operations = [61, 62, 63, 132, 180, 238, 239, 240, 241, 328, 329, 330, 334]
+        self.location = 'Andalucía'
+        self.year = 2020
         
     def get_operation_list(self):
         """Get all the operations ids"""
@@ -29,12 +34,16 @@ class INECrawler(interface):
         try:
             res = requests.get('https://servicios.ine.es/wstempus/js/ES/TABLAS_OPERACION/' + str(operation_id))
             if res.status_code == 200:
-                total_ids = []
                 tables = res.json()
                 if len(tables) > 0:
+                    total_tables = []
                     for x in tables:
-                        total_ids.append(x['Id'])
-                return total_ids
+                        table = dict()
+                        table['id'] = x['Id']
+                        table['name'] = x['Nombre']
+                        table['modification'] = x['Ultima_Modificacion']
+                        total_tables.append(table)
+                return total_tables
             else:
                 return None
         except Exception as e:
@@ -42,15 +51,18 @@ class INECrawler(interface):
             logger.info(e)
             return None
     
-    def get_elements(self, operation_id, table_id):
+    def get_elements(self, operation_id, table):
         """Build a dict of elements metadata"""
+        operation_name = utils.get_operation_name(operation_id)
+        table_id = table['id']
+        table_name = table['name']
+        modification = table['modification']
+        
         try:
             response = requests.get('https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/' + str(table_id))
 
             if response.status_code == 200:
                 meta_json = response.json()
-
-                element_data_list = []
 
                 if len(meta_json) > 0:
                     # Loop to obtain -> Element
@@ -58,8 +70,8 @@ class INECrawler(interface):
                         metadata = dict()
 
                         metadata['identifier'] = str(operation_id) + '_' + str(table_id) + '_' + x['COD']
-                        metadata['title'] = utils.get_operation_name(operation_id, 'Name') + ': ' + utils.get_table_details(table_id, 'Name')
-                        metadata['description'] = 'Datos de la operación ' + str(operation_id) + ': ' + utils.get_operation_name(operation_id, 'Name') + ', Tabla ' + str(table_id) + ': ' + utils.get_table_details(table_id, 'Name') + ', Elemento ' + x['Nombre']
+                        metadata['title'] = operation_name + ':' + table_name
+                        metadata['description'] = operation_name + ': ' + table_name + '. Valores: ' + x['Nombre']
                         if operation_id in self.tourism_operations:
                             metadata['theme'] = 'Turismo'
                         else:
@@ -89,39 +101,37 @@ class INECrawler(interface):
                             nombre = nombre.replace(' ', '')
                             nombre = nombre.replace('/', '')
                             uid = str(uuid.uuid4()).replace('-', '')
-                            csv = 'C:/Users/Usuario/Desktop/solution/' + nombre + uid + '.csv'
-                            print(csv)
+                            csv = 'C:/Users/Usuario/Desktop/csv/' + nombre + uid + '.csv'
                             df.to_csv(csv, index=False)
                             # Guardar un .json con los metadatos
-                            # Libreria para generar un id para que no se repitan los nombres de los archivos
                             # -----------------------------------------------------------
                         else:
                             metadata['resources'] = None
-                        # ------------------------------------
-                        metadata['modified'] = utils.get_table_details(table_id, 'Modification')
+                        metadata['modified'] = modification
                         metadata['license'] = 'INE License'
                         metadata['source'] = 'https://servicios.ine.es'
+                return metadata
 
         except Exception as e:
             print(traceback.format_exc())
             logger.info(e)
             return None
         
-# craw = INECrawler('https://servicios.ine.es')
-    
+craw = INECrawler('https://servicios.ine.es')    
  
-# directorio = "C:/Users/Usuario/Desktop/solution"
-# try:
-#     os.stat(directorio)
-#     file = open(directorio + "/result.txt", "w")
-#     file.write("Resultado de la consulta" + os.linesep)
-#     file.write("------------------------" + os.linesep)
-#     for operation_id in craw.get_operation_list():
-#         for table_id in craw.get_tables(operation_id):
-#             print(craw.get_elements(operation_id, table_id), file=file)
-#     file.close()
-# except:
-#     os.mkdir(directorio)
+directorio = "C:/Users/Usuario/Desktop/solution"
+try:
+    os.stat(directorio)
+    file = open(directorio + "/result.json", "w")
+    for operation_id in craw.get_operation_list():
+        for x in craw.get_tables(operation_id):
+            print(craw.get_elements(operation_id, x), file=file)
+    file.close()
+except:
+    os.mkdir(directorio)
+
+# datos = pd.read_csv('C:/Users/Usuario/Desktop/solution/result.txt', header=0)
+# print(datos)
     
 
 # Schema:    

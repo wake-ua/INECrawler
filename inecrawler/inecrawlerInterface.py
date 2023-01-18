@@ -16,12 +16,12 @@ class INECrawlerInterface(metaclass=ABCMeta):
     def get_tables(id):
         """ This funciton must be used to obtain the tables from a given operation id.
 
-            return ids: list
+            return table information: dict
         """
         pass
 
     @abstractmethod
-    def get_elements(id):
+    def get_elements(operationid, tableid):
         """ This function must be used to obtain the metadata from a given
             table id and also format the metadata with the following
             structure inside a dict:
