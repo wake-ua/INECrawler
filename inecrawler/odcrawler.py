@@ -15,15 +15,13 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class OpenDataCrawler():
 
-    def __init__(self, domain, path, operation_id, tourism_operations, year, theme):
+    def __init__(self, domain, path, operation_id, year, theme):
         self.domain = domain
         
         if not path:
             directory = os.getcwd()
             path = directory + '/data/'
             utils.create_folder(path)
-        
-        self.tourism_operations = tourism_operations
         
         if operation_id:
             self.operation_id = operation_id

@@ -11,9 +11,9 @@ def main():
 
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-m', '--save_meta', required=False,
+    parser.add_argument('-d', '--save_data', required=False,
                         action=argparse.BooleanOptionalAction,
-                        help='Save dataset metadata (default: not save)')
+                        help='Save dataset data (default: not save)')
 
     parser.add_argument('-c', '--categories', nargs='+', required=False,
                         help="Categories to save"
@@ -35,7 +35,7 @@ def main():
 
     # Save the arguments into variables
     url = 'https://servicios.ine.es'
-    save_meta = args['save_meta']
+    save_data = args['save_data']
     categories = utils.lower_list(args['categories'])
     d_path = args['path']
     o_id = args['operation']
@@ -46,13 +46,12 @@ def main():
 
     utils.print_intro()
 
-    save_id = None  # Last id processed
     crawler = None
 
     try:
         if utils.check_url(url):
 
-            crawler = OpenDataCrawler(url, o_id, o_tourism, categories, year, d_path)
+            crawler = OpenDataCrawler(url, o_id, categories, year, d_path)
 
             # last_id = utils.load_resume_id(crawler.resume_path)
 
@@ -62,10 +61,15 @@ def main():
                 logger.info("Obtaining operations from %s", url)
                 print("Obtaining operations from " + url)
                 
+                operations = []
+                
                 if o_id:
-                    operations = []
                     operations.append(int(o_id))
-                else:
+                elif categories:
+                    for x in categories:
+                        if x == 'turismo':
+                            operations = o_tourism
+                else:    
                     operations = crawler.get_operation_list() # Array IDs
                 
                 logger.info("%i operations found", len(operations))
@@ -76,13 +80,15 @@ def main():
                     for operation_id in tqdm(operations, desc="Processing", colour="green"): # Para cada operacion, obtener todas las tablas
 
                         tables = crawler.get_tables(operation_id)
-                        for x in tables:
-                            for x in crawler.get_tables(operation_id):
-                                elements = crawler.get_elements(operation_id, x)
-                                
-                                if elements:
-                                    crawler.save_metadata(elements)
-                                    crawler.save_dataset(elements)
+                        if tables:
+                            for x in tables:
+                                for x in crawler.get_tables(operation_id):
+                                    elements = crawler.get_elements(operation_id, x)
+                                    
+                                    if elements:
+                                        crawler.save_metadata(elements)
+                                        if save_data:
+                                            crawler.save_dataset(elements)
                 else:
                     print("Error ocurred while obtain packages")
 

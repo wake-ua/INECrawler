@@ -13,19 +13,17 @@ class INECrawler(interface):
     def __init__(self, domain):
         self.domain = domain
         self.tourism_operations = [61, 62, 63, 132, 180, 238, 239, 240, 241, 328, 329, 330, 334]
-        self.location = 'Andalucía'
-        self.year = 2020
         
     def get_operation_list(self):
         """Get all the operations ids"""
         total_ids = []
-        # response = requests.get('https://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES')
-        # if response.status_code == 200:
-        #     operations = response.json()
-        #     if len(operations) > 0:
-        #         for p in operations:
-        #             total_ids.append(p['Id'])
-        total_ids = [61]
+        response = requests.get('https://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES')
+        if response.status_code == 200:
+            operations = response.json()
+            if len(operations) > 0:
+                for p in operations:
+                    total_ids.append(p['Id'])
+        # total_ids = [61]
         return total_ids
 
     def get_tables(self, operation_id):
