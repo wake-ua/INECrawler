@@ -65,45 +65,9 @@ def print_intro():
     for x in f:
         print(x, end='')
 
-def load_resume_id(path):
-    try:
-        f = open(path, "r")
-        return f.read()
-
-    except Exception:
-        return None
-
-def save_resume_id(path, id):
-    f = open(path, "w")
-    f.write(id)
-    f.close()
-
 def remove_resume_id(path):
     if os.path.exists(path):
         os.remove(path)
-
-def get_operation_details(id, detail):
-    try:
-        info = ''
-        if id:
-            response = requests.get('https://servicios.ine.es/wstempus/js/ES/OPERACIONES_DISPONIBLES')
-            if response.status_code == 200:
-                packages = response.json()
-                if len(packages) > 0:
-                    for p in packages:
-                        if p['Id'] == id:
-                            if detail == 'Nombre':
-                                info = p['Nombre']
-                            elif detail == 'Cod_IOE':
-                                info = p['Cod_IOE']
-                            elif detail == 'Codigo':
-                                info = p['Codigo']
-        return info
-        
-    except Exception as e:
-        print(traceback.format_exc())
-        logger.info(e)
-        return None
     
 def get_operation_name(id):
     try:

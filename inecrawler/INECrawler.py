@@ -3,7 +3,6 @@ import utils
 import traceback
 import uuid
 import os
-import pandas as pd
 import numpy as np
 from setup_logger import logger
 from inecrawlerInterface import INECrawlerInterface as interface
@@ -75,7 +74,7 @@ class INECrawler(interface):
                         if operation_id in self.tourism_operations:
                             metadata['theme'] = 'Turismo'
                         else:
-                            metadata['theme'] = '-'
+                            metadata['theme'] = None
 
                         # ------------------------------------
                         data = x['Data']
@@ -87,27 +86,21 @@ class INECrawler(interface):
 
                                 information_data['id'] = x['COD']
                                 information_data['name'] = x['Nombre']
-                                information_data['date'] = y['Fecha']
+                                information_data['date'] = str(y['Fecha'])
                                 information_data['year'] = y['Anyo']
                                 information_data['month'] = y['FK_Periodo']
                                 information_data['value'] = y['Valor']
 
                                 resource_list.append(information_data)
                             metadata['resources'] = resource_list
-                            # -----------------------------------------------------------
-                            # para leer un dict
-                            df = pd.DataFrame(resource_list)
                             nombre = x['Nombre'].replace('.', '')
                             nombre = nombre.replace(' ', '')
                             nombre = nombre.replace('/', '')
                             uid = str(uuid.uuid4()).replace('-', '')
-                            csv = 'C:/Users/Usuario/Desktop/csv/' + nombre + uid + '.csv'
-                            df.to_csv(csv, index=False)
-                            # Guardar un .json con los metadatos
-                            # -----------------------------------------------------------
+                            metadata['downloadUrl'] = nombre + uid + '.csv'
                         else:
                             metadata['resources'] = None
-                        metadata['modified'] = modification
+                        metadata['modified'] = str(modification)
                         metadata['license'] = 'INE License'
                         metadata['source'] = 'https://servicios.ine.es'
                 return metadata
@@ -116,23 +109,6 @@ class INECrawler(interface):
             print(traceback.format_exc())
             logger.info(e)
             return None
-        
-craw = INECrawler('https://servicios.ine.es')    
- 
-directorio = "C:/Users/Usuario/Desktop/solution"
-try:
-    os.stat(directorio)
-    file = open(directorio + "/result.json", "w")
-    for operation_id in craw.get_operation_list():
-        for x in craw.get_tables(operation_id):
-            print(craw.get_elements(operation_id, x), file=file)
-    file.close()
-except:
-    os.mkdir(directorio)
-
-# datos = pd.read_csv('C:/Users/Usuario/Desktop/solution/result.txt', header=0)
-# print(datos)
-    
 
 # Schema:    
 # Object -> operation id
@@ -142,17 +118,7 @@ except:
 #                            -> year
 #                            -> last modification
 #                            -> elements          -> name
-#                                                 -> data.csv (descargar .csv) -> date
+#                                                 -> data.csv (descargar .json)-> date
 #                                                                              -> year
 #                                                                              -> month
 #                                                                              -> value
-
-# Concatenar 3 id "_"
-# Nombre elemento: Operacion + Tabla
-# Descripcion: Operacion + Tabla + Elemento
-# Keywords: -
-# Theme: Turismo
-# Resources: nombreArchivo.csv
-# LastModification: ultima modificacion
-# Licencia: Licencia INE (preguntar a Norberto cuál usa el INE)
-# Source: url INE
