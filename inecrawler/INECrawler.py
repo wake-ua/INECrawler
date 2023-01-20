@@ -66,7 +66,7 @@ class INECrawler(interface):
                     for x in meta_json:
                         metadata = dict()
 
-                        metadata['identifier'] = str(operation_id) + '_' + str(table_id) + '_' + x['COD']
+                        metadata['identifier'] = str(operation_id) + '_' + str(table_id) + '_' + str(x['COD'])
                         metadata['title'] = operation_name + ':' + table_name
                         metadata['description'] = operation_name + ': ' + table_name + '. Valores: ' + x['Nombre']
                         if operation_id in self.tourism_operations:
@@ -82,7 +82,7 @@ class INECrawler(interface):
                             for y in data:
                                 information_data = dict()
 
-                                information_data['id'] = x['COD']
+                                information_data['id'] = str(x['COD'])
                                 information_data['name'] = x['Nombre']
                                 information_data['date'] = str(y['Fecha'])
                                 information_data['year'] = y['Anyo']
@@ -97,7 +97,8 @@ class INECrawler(interface):
                             uid = str(uuid.uuid4()).replace('-', '')
                             metadata['downloadUrl'] = nombre + uid + '.csv'
                         else:
-                            metadata['resources'] = None
+                            metadata['resources'] = []
+                            metadata['downloadUrl'] = ''
                         metadata['modified'] = str(modification)
                         metadata['license'] = 'INE License'
                         metadata['source'] = 'https://servicios.ine.es'
