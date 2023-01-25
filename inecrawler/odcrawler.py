@@ -15,7 +15,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class OpenDataCrawler():
 
-    def __init__(self, domain, path, operation_id, year, theme):
+    def __init__(self, domain, operation_id, theme, year, path):
         self.domain = domain
         
         if not path:

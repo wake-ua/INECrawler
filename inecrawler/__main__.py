@@ -53,8 +53,6 @@ def main():
 
             crawler = OpenDataCrawler(url, o_id, categories, year, d_path)
 
-            # last_id = utils.load_resume_id(crawler.resume_path)
-
             if crawler.dms:
 
                 # Show info about the number of operations
@@ -86,7 +84,12 @@ def main():
                                     elements = crawler.get_elements(operation_id, x)
                                     
                                     if elements:
-                                        crawler.save_metadata(elements)
+                                        if year:
+                                            for n in elements['resources']:
+                                                if n['year'] == year:
+                                                    crawler.save_metadata(elements)
+                                        else:
+                                            crawler.save_metadata(elements)
                                         if save_data:
                                             if elements['downloadUrl'] != '':
                                                 crawler.save_dataset(elements)
