@@ -85,9 +85,13 @@ def main():
                                     
                                     if elements:
                                         if year:
-                                            for n in elements['resources']:
-                                                if n['year'] == year:
-                                                    crawler.save_metadata(elements)
+                                            resources = []
+                                            for i in elements['resources']:
+                                                if i['year'] == int(year):
+                                                    resources.append(i)
+                                            elements['resources'] = resources
+                                            if elements['resources']:
+                                                crawler.save_metadata(elements)
                                         else:
                                             crawler.save_metadata(elements)
                                         if save_data:
