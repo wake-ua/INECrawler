@@ -14,16 +14,16 @@ INE Crawler is a tool to extract data from the National Statistics Institute.
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/aberenguerpas/opendatacrawler">
+  <a href="https://github.com/wake-ua/INECrawler">
     <img src="images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
   <p align="center">
     A tool to craw data to your projects from open data portals
     <br />
-    <a href="https://github.com/aberenguerpas/opendatacrawler/issues">Report Bug</a>
+    <a href="https://github.com/wake-ua/INECrawler/issues">Report Bug</a>
     ·
-    <a href="https://github.com/aberenguerpas/opendatacrawler/issues">Request Feature</a>
+    <a href="https://github.com/wake-ua/INECrawler/issues">Request Feature</a>
   </p>
 </div>
 
@@ -121,7 +121,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 \* Works with restrictions or download limitations
 
-See the [open issues](https://github.com/aberenguerpas/opendatacrawler/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/wake-ua/INECrawler/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
