@@ -3,14 +3,6 @@ INE Crawler is a tool to extract data from the National Statistics Institute.
 
 <div id="top"></div>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -139,7 +131,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 🙋‍♂️Paula González Martínez \
-📱[@lucyleia28](www.linkedin.com/in/paulagonzalezmartinez) \
+📱[@lucyleia28](https://www.linkedin.com/in/paulagonzalezmartinez/) \
 ✉️ pgm136@alu.ua.es
 
 <p align="right">(<a href="#top">back to top</a>)</p>
