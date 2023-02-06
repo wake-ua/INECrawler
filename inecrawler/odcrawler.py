@@ -20,7 +20,7 @@ class OpenDataCrawler():
         
         if not path:
             directory = os.getcwd()
-            path = directory + '/data/'
+            path = os.path.join(directory, 'data')
             utils.create_folder(path)
         
         if operation_id:
@@ -37,12 +37,11 @@ class OpenDataCrawler():
             self.theme = theme
         else:
             self.theme = None
-          
-        print(path)    
-        self.save_path = path + utils.clean_url(self.domain)
-        print(self.save_path)
+             
+        self.save_path =os.path.join(path, utils.clean_url(self.domain))
+
         
-        self.resume_path = path + "resume_"+utils.clean_url(self.domain)+".txt"
+        self.resume_path = os.path.join(path, "resume_"+utils.clean_url(self.domain)+".txt")
         
         print("Detecting DMS")
         self.detect_dms()
