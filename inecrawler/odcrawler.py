@@ -101,6 +101,30 @@ class OpenDataCrawler():
             logger.error('Error saving metadata  %s',
                          self.save_path + '/' + data['downloadUrl'])
             logger.error(e)
+            
+    def save_partial_dataset(self, data):
+        """ Save a dataset from a given url and extension"""
+        # Write the partial content on a file
+        path = self.save_path + '/' + data['downloadUrl']
+        logger.info("Path: %s", path)
+
+        try:
+            cont = 0
+            lines = []
+            with open(self.save_path + '/' + data['downloadUrl'],
+                      'w', encoding='utf-8') as f:
+                logger.info('Tamaño resources: %s', len(data['resources']))
+                for i in data['resources']:
+                    if cont < 10:
+                        lines.append(i)
+                        cont += 1
+                    else:
+                        break
+                json.dump(lines, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            logger.error('Error saving metadata  %s',
+                         self.save_path + '/' + data['downloadUrl'])
+            logger.error(e)
 
     def get_operation_list(self):
         return self.dms_instance.get_operation_list()

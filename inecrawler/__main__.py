@@ -29,6 +29,10 @@ def main():
 
     parser.add_argument('-p', '--path', type=str, required=False,
                         help="Path to save data (Ex. -p /my/example/path/)") # Donde ir guardando los archivos
+    
+    parser.add_argument('-pd', '--partial_dataset', required=False,
+                        action=argparse.BooleanOptionalAction,
+                        help='Save partial dataset (default: not save)')
 
 
     args = vars(parser.parse_args())
@@ -41,6 +45,7 @@ def main():
     o_id = args['operation']
     year = args['year']
     o_tourism = [61, 62, 63, 132, 180, 238, 239, 240, 241, 328, 329, 330, 334]
+    partial = args['partial_dataset']
 
     # Show the intro text
 
@@ -79,7 +84,7 @@ def main():
 
                         tables = crawler.get_tables(operation_id)
                         if tables:
-                            for x in tables:
+                            for y in tables:
                                 for x in crawler.get_tables(operation_id):
                                     elements = crawler.get_elements(operation_id, x)
                                     
@@ -91,12 +96,18 @@ def main():
                                                     resources.append(i)
                                             elements['resources'] = resources
                                             if elements['resources']:
-                                                crawler.save_metadata(elements)
+                                                if partial:
+                                                    crawler.save_partial_dataset(elements)
+                                                else:
+                                                    crawler.save_dataset(elements)
                                         else:
-                                            crawler.save_metadata(elements)
+                                            if partial:
+                                                crawler.save_partial_dataset(elements)
+                                            else:
+                                                crawler.save_dataset(elements)
                                         if save_data:
                                             if elements['downloadUrl'] != '':
-                                                crawler.save_dataset(elements)
+                                                crawler.save_metadata(elements)
                 else:
                     print("Error ocurred while obtain packages")
 
