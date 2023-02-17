@@ -45,7 +45,7 @@ def lower_list(li):
 def create_folder(path):
     if not os.path.isdir(path):
         try:
-            path = path.replace('/', '\ ')
+            #path = path.replace('/', '\ ')
             path = path.replace(' ', '')
             os.mkdir(path)
         except OSError:
