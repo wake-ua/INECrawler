@@ -82,12 +82,12 @@ class INECrawler(interface):
                                 for y in data:
                                     information_data = dict()
 
-                                    information_data['id'] = str(x['COD'])
-                                    information_data['name'] = x['Nombre']
-                                    information_data['date'] = str(y['Fecha'])
-                                    information_data['year'] = y['Anyo']
-                                    information_data['month'] = y['FK_Periodo']
-                                    information_data['value'] = y['Valor']
+                                    information_data['id'] = str(x.get('COD', '-'))
+                                    information_data['name'] = x.get('Nombre', '-')
+                                    information_data['date'] = str(y.get('Fecha', '-'))
+                                    information_data['year'] = y.get('Anyo', '-')
+                                    information_data['month'] = y.get('FK_Periodo', '-')
+                                    information_data['value'] = y.get('Valor', '-')
 
                                     resource_list.append(information_data)
                                 metadata['resources'] = resource_list
