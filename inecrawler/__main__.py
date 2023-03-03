@@ -106,7 +106,7 @@ def main():
                                             else:
                                                 crawler.save_dataset(elements)
                                         if save_data:
-                                            if elements['downloadUrl'] != '':
+                                            if elements['filename'] != '':
                                                 crawler.save_metadata(elements)
                 else:
                     print("Error ocurred while obtain packages")

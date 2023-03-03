@@ -93,24 +93,24 @@ class OpenDataCrawler():
     def save_dataset(self, data):
         """ Save the dict containing the metadata on a json file"""
         try:
-            with open(self.save_path + '/' + data['downloadUrl'],
+            with open(self.save_path + '/' + data['filename'],
                       'w', encoding='utf-8') as f:
                 json.dump(data['resources'], f, ensure_ascii=False, indent=4)
         except Exception as e:
             logger.error('Error saving metadata  %s',
-                         self.save_path + '/' + data['downloadUrl'])
+                         self.save_path + '/' + data['filename'])
             logger.error(e)
             
     def save_partial_dataset(self, data):
         """ Save a dataset from a given url and extension"""
         # Write the partial content on a file
-        path = self.save_path + '/' + data['downloadUrl']
+        path = self.save_path + '/' + data['filename']
         logger.info("Path: %s", path)
 
         try:
             cont = 0
             lines = []
-            with open(self.save_path + '/' + data['downloadUrl'],
+            with open(self.save_path + '/' + data['filename'],
                       'w', encoding='utf-8') as f:
                 logger.info('Tamaño resources: %s', len(data['resources']))
                 for i in data['resources']:
@@ -122,7 +122,7 @@ class OpenDataCrawler():
                 json.dump(lines, f, ensure_ascii=False, indent=4)
         except Exception as e:
             logger.error('Error saving metadata  %s',
-                         self.save_path + '/' + data['downloadUrl'])
+                         self.save_path + '/' + data['filename'])
             logger.error(e)
 
     def get_operation_list(self):

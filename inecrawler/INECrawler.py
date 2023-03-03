@@ -55,7 +55,8 @@ class INECrawler(interface):
         modification = table['modification']
         
         try:
-            response = requests.get('https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/' + str(table_id))
+            url = 'https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/' + str(table_id)
+            response = requests.get(url)
 
             if response.status_code == 200:
                 meta_json = response.json()
@@ -65,17 +66,17 @@ class INECrawler(interface):
                     for x in meta_json:
                         metadata = dict()
 
-                        if x['COD']:
-                            metadata['identifier'] = str(operation_id) + '_' + str(table_id) + '_' + str(x['COD'])
+                        if x.get('COD', None) is not None or x['COD']:
+                            metadata['identifier'] = str(operation_id) + '_' + str(table_id) + '_' + str(x.get('COD', None))
                             metadata['title'] = operation_name + ':' + table_name
-                            metadata['description'] = operation_name + ': ' + table_name + '. Valores: ' + x['Nombre']
+                            metadata['description'] = operation_name + ': ' + table_name + '. Valores: ' + x.get('Nombre', None)
                             if operation_id in self.tourism_operations:
                                 metadata['theme'] = 'Turismo'
                             else:
                                 metadata['theme'] = None
 
                             # ------------------------------------
-                            data = x['Data']
+                            data = x.get('Data', None)
                             if len(data) > 0:
                                 resource_list = []
                                 
@@ -95,11 +96,12 @@ class INECrawler(interface):
                                 nombre = nombre.replace(' ', '')
                                 nombre = nombre.replace('/', '')
                                 uid = str(uuid.uuid4()).replace('-', '')
-                                metadata['downloadUrl'] = nombre + uid + '.csv'
+                                metadata['filename'] = nombre + uid + '.csv'
                             else:
                                 metadata['resources'] = []
-                                metadata['downloadUrl'] = ''
+                                metadata['filename'] = ''
                             metadata['modified'] = str(modification)
+                            metadata['url'] = url
                             metadata['license'] = 'INE License'
                             metadata['source'] = 'https://servicios.ine.es'
                 return metadata

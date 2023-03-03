@@ -30,7 +30,7 @@ class INECrawlerInterface(metaclass=ABCMeta):
             metadata['title'] -> Packages title: OperationName_TableName
             metadata['description'] -> Packages Description: OperationName_TableName_ElementName
             metadata['theme'] -> Packages category, theme, topic... (Turism)
-            meta['resources'] -> List of resources: fileName.csv (ElementData)
+            metadata['resources'] -> List of resources: fileName.csv (ElementData)
                             resource['id'] -> Resource name: ElementId
                             resource['name'] -> Resource name: ElementName
                             resource['date'] -> Resource date: ElementDate
@@ -38,6 +38,8 @@ class INECrawlerInterface(metaclass=ABCMeta):
                             resource['month'] -> Resource month: ElementMonth
                             resource['value'] -> Resource value: ElementValue
             metadata['modified'] -> Last modification of the table
+            metadata['filename'] -> Name of the downloaded file
+            metadata['url'] -> Download url
             metadata['license'] -> INE license
             metadata['source'] -> INE url
 
